@@ -10,7 +10,7 @@ import { useState } from "react";
  * import mui
  */
 import { Egg } from "@mui/icons-material";
-import { BottomNavigation, BottomNavigationAction, Box, Button, Grid, Paper, TextField, Typography } from "./mui";
+import { BottomNavigation, BottomNavigationAction, Grid, Paper, Typography } from "./mui";
 import Food from "./food";
 import Expense from "./expense";
 import Updates from "./Updates";
