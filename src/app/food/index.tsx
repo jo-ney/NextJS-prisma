@@ -24,7 +24,17 @@ export default function Food() {
   const [food, setFood] = useState("");
   const [weight, setWeight] = useState("");
   const [description, setDescription] = useState("");
-  const [entries, setEntries] = useState<any[]>([]);
+
+  type FoodEntry = {
+    id: number;
+    session: string;
+    foodName: string;
+    weight: number;
+    description?: string;
+    createdAt: string;
+  };
+  
+  const [entries, setEntries] = useState<FoodEntry[]>([]);
 
   // Fetch today's entries
   const fetchEntries = async () => {
@@ -48,7 +58,7 @@ export default function Food() {
 
     if (res.ok) {
       alert("Food entry saved ✅");
-      setSession("");
+      setSession(null);
       setFood("");
       setWeight("");
       setDescription("");
@@ -92,7 +102,7 @@ export default function Food() {
               disablePortal
               options={sessions}
               sx={{ width: 300 }}
-              onChange={(event: any, newValue: string | null) => setSession(newValue)}
+              onChange={(event: unknown, newValue: string | null) => setSession(newValue)}
               renderInput={(params) => <TextField {...params} label="Session" />}
             />
             <TextField
