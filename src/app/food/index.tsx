@@ -101,6 +101,7 @@ export default function Food() {
             <Autocomplete
               disablePortal
               options={sessions}
+              value={session}
               sx={{ width: 300 }}
               onChange={(event: unknown, newValue: string | null) => setSession(newValue)}
               renderInput={(params) => <TextField {...params} label="Session" />}
@@ -110,6 +111,7 @@ export default function Food() {
               sx={{
                 width: 200
               }}
+              value={food}
               onChange={(e) => setFood(e.target.value)}
             ></TextField>
             <TextField
@@ -119,11 +121,12 @@ export default function Food() {
                 width: 100,
                 "& .MuiInputLabel-root": { fontSize: "0.8rem" },
               }}
+              value={weight}
               onChange={(e) => setWeight(e.target.value)}
             ></TextField>
           </Grid>
           <Grid my={2}>
-            <TextField label='Description' onChange={(e) => setDescription(e.target.value)} ></TextField>
+            <TextField label='Description' value={description} onChange={(e) => setDescription(e.target.value)} ></TextField>
           </Grid>
           <Grid
             sx={{
