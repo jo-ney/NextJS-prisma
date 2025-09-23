@@ -82,7 +82,8 @@
 //   );
 // }
 
-"use client";
+
+
 
 import { useState, useEffect } from "react";
 
@@ -90,6 +91,19 @@ import { useState, useEffect } from "react";
  * import mui
  */
 import { Box, Button, Grid, TextField, Typography, List, ListItem, Divider, ListItemText } from "../mui";
+// 2️⃣ Type declaration goes here, before the component
+type ExpenseEntry = {
+  id: number;
+  itemName: string;
+  capacity: number;
+  itemPrice: number;
+  actualPrice: number;
+  calculatedPrice: number;
+  description?: string;
+  dateTime: string;
+  createdAt: string;
+};
+
 
 export default function Expense() {
   const [itemName, setItemName] = useState("");
@@ -97,7 +111,7 @@ export default function Expense() {
   const [itemPrice, setItemPrice] = useState("");
   const [actualPrice, setActualPrice] = useState("");
   const [description, setDescription] = useState("");
-  const [entries, setEntries] = useState<any[]>([]);
+  const [entries, setEntries] = useState<ExpenseEntry[]>([]);
 
   // Calculate derived price
   const calculatedPrice =
@@ -107,7 +121,7 @@ export default function Expense() {
   const fetchEntries = async () => {
     const res = await fetch("/api/expense");
     if (res.ok) {
-      const data = await res.json();
+      const data: ExpenseEntry[] = await res.json();
       setEntries(data);
     }
   };
