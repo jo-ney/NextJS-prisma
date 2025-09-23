@@ -8,8 +8,7 @@
 /**
  * import mui
  */
-import { Egg } from "@mui/icons-material";
-import { Autocomplete, BottomNavigation, BottomNavigationAction, Box, Button, Divider, Grid, List, ListItem, ListItemText, Paper, TextField, Typography } from "../mui";
+import { Autocomplete, Box, Button, Divider, Grid, List, ListItem, ListItemText, TextField, Typography } from "../mui";
 import { useState, useEffect } from "react";
 
 export default function Food() {
@@ -80,14 +79,12 @@ export default function Food() {
         sx={{
           display: "flex",
           justifyContent: "center",
-          height: "85vh",
-          flexDirection: "column",
-          alignItems: "center"
+          flexDirection: 'row',
+          alignItems: "center",
+          gap: 3
         }}
-        container
-        spacing={2}
       >
-        <Box
+        <Grid
           sx={{
             maxWidth: 300,
             maxHeight: 450,
@@ -96,7 +93,7 @@ export default function Food() {
             bgcolor: '#88e1e0'
           }}
         >
-          <Typography m={2}>Food Calorie Tracker</Typography>
+          <Typography variant="h5" textAlign={'center'} mb={5}>Food Tracker</Typography>
           <Grid container spacing={2}>
             <Autocomplete
               disablePortal
@@ -135,45 +132,43 @@ export default function Food() {
               alignItems: 'center'
             }}
           ><Button variant="contained" onClick={handleSubmit} >Submit</Button></Grid>
-        </Box>
+        </Grid>
 
          {/* Entries List */}
-      <Box sx={{ maxWidth: 350, width: "100%" }}>
-        <Typography variant="h6" mb={1}>Today’s Entries</Typography>
-        {grouped.map((group) => (
-          <Box key={group.session} mb={2}>
-            <Typography variant="subtitle1" fontWeight="bold">{group.session}</Typography>
-            <List dense>
-              {group.items.length > 0 ? (
-                group.items.map((item) => (
-                  <div key={item.id}>
-                    <ListItem>
-                      <ListItemText
-                        primary={`${item.foodName} - ${item.weight}g`}
-                        secondary={item.description}
-                      />
-                    </ListItem>
-                    <Divider />
-                  </div>
-                ))
-              ) : (
-                <Typography variant="body2" color="text.secondary">No entries</Typography>
-              )}
-            </List>
-          </Box>
-        ))}
-      </Box>
-        
-        <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
-          <BottomNavigation
-            showLabels
-          >
-            <BottomNavigationAction label='Food' icon={<Egg/>}></BottomNavigationAction>
-            <BottomNavigationAction label='Expense' icon={<Egg/>}></BottomNavigationAction>
-            <BottomNavigationAction label='Updates' icon={<Egg/>}></BottomNavigationAction>
-          </BottomNavigation>
-        </Paper>
-      
+        <Grid sx={{
+          maxWidth: 300,
+          width: "100%",
+          maxHeight: 450,
+          overflow: "scroll",
+          "&::-webkit-scrollbar": { display: "none" },
+          bgcolor: "#9bd39b",
+          p: 5,
+          borderRadius: 5
+          }}>
+          <Typography variant="h6" mb={1}>Today’s Entries</Typography>
+          {grouped.map((group) => (
+            <Box key={group.session} mb={2}>
+              <Typography variant="subtitle1" fontWeight="bold">{group.session}</Typography>
+              <List dense>
+                {group.items.length > 0 ? (
+                  group.items.map((item) => (
+                    <div key={item.id}>
+                      <ListItem>
+                        <ListItemText
+                          primary={`${item.foodName} - ${item.weight}g`}
+                          secondary={item.description}
+                        />
+                      </ListItem>
+                      <Divider />
+                    </div>
+                  ))
+                ) : (
+                  <Typography variant="body2" color="text.secondary">No entries</Typography>
+                )}
+              </List>
+            </Box>
+          ))}
+        </Grid>
       </Grid>
    </>
   );

@@ -9,7 +9,7 @@ import { useState } from "react";
 /**
  * import mui
  */
-import { Egg } from "@mui/icons-material";
+import { AccountBalanceWallet, Egg, TipsAndUpdates } from "@mui/icons-material";
 import { BottomNavigation, BottomNavigationAction, Grid, Paper, Typography } from "./mui";
 import Food from "./food";
 import Expense from "./expense";
@@ -44,8 +44,8 @@ export default function Home() {
         sx={{
           display: 'flex',
           justifyContent: 'center',
-          m: 5,
-          height: '85vh'
+          mt: 5,
+          mb:10
         }}
       >
         {Component && <Component />}
@@ -59,8 +59,8 @@ export default function Home() {
             }}
           >
             <BottomNavigationAction label='Food' icon={<Egg/>} value='food'/>
-            <BottomNavigationAction label='Expense' icon={<Egg/>} value='expense'/>
-            <BottomNavigationAction label='Updates' icon={<Egg/>} value='updates'/>
+            <BottomNavigationAction label='Expense' icon={<AccountBalanceWallet />} value='expense'/>
+            <BottomNavigationAction label='Updates' icon={<TipsAndUpdates/>} value='updates'/>
           </BottomNavigation>
         </Paper>
       

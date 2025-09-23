@@ -1,22 +1,111 @@
+// /**
+//  * import react
+//  */
+
+// /**
+//  * import mui
+//  */
+// import { Box, Button, Grid, TextField, Typography } from "../mui";
+
+// export default function Updates() {
+//   return (
+//     <>
+//       <Grid
+//         sx={{
+//           display: 'flex',
+//           justifyContent: 'center',
+//           m: 5,
+//         }}
+//       >
+//         <Box
+//           sx={{
+//             maxWidth: 300,
+//             maxHeight: 400,
+//             p: 5,
+//             borderRadius: 5, 
+//             bgcolor: '#88e1e0'
+//           }}
+//         >
+//           <Typography variant="h5" textAlign={'center'} mb={5}>Updates</Typography>
+//           <Grid container spacing={2} mb={5}>
+//             <TextField
+//               label='Title'
+//               sx={{
+//                 width: 200
+//               }}
+//               ></TextField>
+//             <TextField
+//               label='Description'
+//               sx={{
+//                 width: 200
+//               }}
+//               ></TextField>
+//             <TextField
+//               label='Note'
+//               sx={{
+//                 width: 200
+//               }}
+//               ></TextField>
+            
+//           </Grid>
+//           <Grid
+//             sx={{
+//               display: 'flex',
+//               justifyContent: 'center',
+//               alignItems: 'center'
+//             }}
+//           ><Button variant="contained">Submit</Button></Grid>
+//         </Box>
+      
+//       </Grid>
+//    </>
+//   );
+// }
+
+
+
+
+"use client"; // required for hooks
+
 /**
  * import react
  */
+import { useState } from "react";
 
 /**
  * import mui
  */
-import { Egg } from "@mui/icons-material";
-import { BottomNavigation, BottomNavigationAction, Box, Button, Grid, Paper, TextField, Typography } from "../mui";
+import { Box, Button, Grid, TextField, Typography } from "../mui";
 
 export default function Updates() {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [note, setNote] = useState("");
+
+  const handleSubmit = async () => {
+    const res = await fetch("/api/update", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, description, note }),
+    });
+
+    if (res.ok) {
+      alert("✅ Update saved");
+      setTitle("");
+      setDescription("");
+      setNote("");
+    } else {
+      alert("❌ Failed to save update");
+    }
+  };
+
   return (
     <>
       <Grid
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
+          display: "flex",
+          justifyContent: "center",
           m: 5,
-          height: '85vh'
         }}
       >
         <Box
@@ -24,50 +113,46 @@ export default function Updates() {
             maxWidth: 300,
             maxHeight: 400,
             p: 5,
-            borderRadius: 5, 
-            bgcolor: '#88e1e0'
+            borderRadius: 5,
+            bgcolor: "#88e1e0",
           }}
         >
-          <Typography m={2}>Updates</Typography>
-          <Grid container spacing={2}>
+          <Typography variant="h5" textAlign={"center"} mb={5}>
+            Updates
+          </Typography>
+          <Grid container spacing={2} mb={5}>
             <TextField
-              label='Food'
-              sx={{
-                width: 200
-              }}
-              ></TextField>
+              label="Title"
+              sx={{ width: 200 }}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
             <TextField
-              label='Weight(g)'
-              sx={{
-                width: 100,
-                "& .MuiInputLabel-root": { fontSize: "0.8rem" },
-              }}
-            
-            ></TextField>
-          </Grid>
-          <Grid my={2}>
-            <TextField label='Description'></TextField>
+              label="Description"
+              sx={{ width: 200 }}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+            <TextField
+              label="Note"
+              sx={{ width: 200 }}
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+            />
           </Grid>
           <Grid
             sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
-          ><Button variant="contained">Submit</Button></Grid>
-        </Box>
-        
-        <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
-          <BottomNavigation
-            showLabels
           >
-            <BottomNavigationAction label='Food' icon={<Egg/>}></BottomNavigationAction>
-            <BottomNavigationAction label='Expense' icon={<Egg/>}></BottomNavigationAction>
-            <BottomNavigationAction label='Updates' icon={<Egg/>}></BottomNavigationAction>
-          </BottomNavigation>
-        </Paper>
-      
+            <Button variant="contained" onClick={handleSubmit}>
+              Submit
+            </Button>
+          </Grid>
+        </Box>
       </Grid>
-   </>
+    </>
   );
 }
