@@ -8,7 +8,7 @@
 /**
  * import mui
  */
-import { Autocomplete, Box, Button, Divider, Grid, List, ListItem, ListItemText, TextField, Typography } from "../mui";
+import { Autocomplete, Box, Button, CircularProgress, Divider, Grid, List, ListItem, ListItemText, TextField, Typography } from "../mui";
 import { useState, useEffect } from "react";
 
 export default function Food() {
@@ -23,6 +23,7 @@ export default function Food() {
   const [food, setFood] = useState("");
   const [weight, setWeight] = useState("");
   const [description, setDescription] = useState("");
+  const [ isResOk, setIsResOk ] = useState(false)
 
   type FoodEntry = {
     id: number;
@@ -41,6 +42,7 @@ export default function Food() {
     if (res.ok) {
       const data = await res.json();
       setEntries(data);
+      setIsResOk(true)
     }
   };
 
@@ -79,9 +81,10 @@ export default function Food() {
         sx={{
           display: "flex",
           justifyContent: "center",
-          flexDirection: 'row',
+          flexDirection: { xs: 'column', md: 'row'},
           alignItems: "center",
-          gap: 3
+          gap: 3,
+          mt: 4
         }}
       >
         <Grid
@@ -90,7 +93,7 @@ export default function Food() {
             maxHeight: 450,
             p: 5,
             borderRadius: 5, 
-            bgcolor: '#88e1e0'
+            bgcolor: '#fdbd09'
           }}
         >
           <Typography variant="h5" textAlign={'center'} mb={5}>Food Tracker</Typography>
@@ -139,14 +142,15 @@ export default function Food() {
           maxWidth: 300,
           width: "100%",
           maxHeight: 450,
+          height: '100%',
           overflow: "scroll",
           "&::-webkit-scrollbar": { display: "none" },
-          bgcolor: "#9bd39b",
+          bgcolor: "#a7058d",
           p: 5,
           borderRadius: 5
           }}>
           <Typography variant="h6" mb={1}>Today’s Entries</Typography>
-          {grouped.map((group) => (
+          {isResOk ? grouped.map((group) => (
             <Box key={group.session} mb={2}>
               <Typography variant="subtitle1" fontWeight="bold">{group.session}</Typography>
               <List dense>
@@ -167,7 +171,9 @@ export default function Food() {
                 )}
               </List>
             </Box>
-          ))}
+          ))
+          : <Grid sx={{ height: "100%", textAlign: 'center', alignContent: 'center' }}><CircularProgress size={50} /></Grid>
+        }
         </Grid>
       </Grid>
    </>

@@ -105,6 +105,7 @@ export default function Updates() {
         sx={{
           display: "flex",
           justifyContent: "center",
+          flexDirection: { xs: 'column', md: 'row'},
           m: 5,
         }}
       >

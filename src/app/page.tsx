@@ -44,8 +44,8 @@ export default function Home() {
         sx={{
           display: 'flex',
           justifyContent: 'center',
-          mt: 5,
-          mb:10
+          mt: 1,
+          mb:10,
         }}
       >
         {Component && <Component />}
@@ -56,6 +56,9 @@ export default function Home() {
             value={value}
             onChange={(event, newValue) => {
               setValue(newValue);
+            }}
+            sx={{
+              bgcolor: '#ff671d'
             }}
           >
             <BottomNavigationAction label='Food' icon={<Egg/>} value='food'/>

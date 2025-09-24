@@ -90,7 +90,7 @@ import { useState, useEffect } from "react";
 /**
  * import mui
  */
-import { Box, Button, Grid, TextField, Typography, List, ListItem, Divider, ListItemText } from "../mui";
+import { Box, Button, Grid, TextField, Typography, List, ListItem, Divider, ListItemText, CircularProgress, Stack } from "../mui";
 // 2️⃣ Type declaration goes here, before the component
 type ExpenseEntry = {
   id: number;
@@ -112,6 +112,8 @@ export default function Expense() {
   const [actualPrice, setActualPrice] = useState("");
   const [description, setDescription] = useState("");
   const [entries, setEntries] = useState<ExpenseEntry[]>([]);
+  const [ isResOk, setIsResOk ] = useState(false)
+  const [amount, setAmount] = useState<number>(0)
 
   // Calculate derived price
   const calculatedPrice =
@@ -119,16 +121,34 @@ export default function Expense() {
 
   // Fetch entries
   const fetchEntries = async () => {
+    setIsResOk(false)
     const res = await fetch("/api/expense");
     if (res.ok) {
       const data: ExpenseEntry[] = await res.json();
       setEntries(data);
+      setIsResOk(true)
+      
     }
   };
+
+  //total
+
+  const totalAmount = () => {
+    if(entries.length>0) {
+      entries.map((item) => {
+        setAmount((prev) => prev + item.actualPrice)
+      })
+    } else
+        return setAmount(0)
+  }
 
   useEffect(() => {
     fetchEntries();
   }, []);
+
+useEffect(() => {
+  totalAmount()
+}, [entries])
 
   // Submit handler
   const handleSubmit = async () => {
@@ -164,8 +184,9 @@ export default function Expense() {
       sx={{
         display: "flex",
         justifyContent: "center",
+        flexDirection: { xs: 'column', md: 'row'},
         gap: 3,
-        m: 5,
+        mt: {xs: 7, md: 0}
       }}
     >
       {/* Form */}
@@ -178,10 +199,10 @@ export default function Expense() {
           bgcolor: "#88e1e0",
         }}
       >
-        <Typography variant="h5" textAlign={"center"} mb={5}>
+        <Typography variant="h5" textAlign={"center"} mb={3}>
           Expense Tracker
         </Typography>
-        <Grid container spacing={2} direction="column">
+        <Grid container spacing={1} direction="column">
           <TextField label="Item Name" value={itemName} onChange={(e) => setItemName(e.target.value)} />
           <TextField
             label="Capacity (g/ml)"
@@ -217,7 +238,7 @@ export default function Expense() {
         sx={{
           maxWidth: 350,
           width: "100%",
-          maxHeight: 450,
+          maxHeight: 580,
           overflow: "scroll",
           "&::-webkit-scrollbar": { display: "none" },
           bgcolor: "#9bd39b",
@@ -228,14 +249,25 @@ export default function Expense() {
         <Typography variant="h6" mb={1}>
           Recent Expenses
         </Typography>
-        {entries.length > 0 ? (
+        {isResOk ? entries.length > 0 ? (
           entries.map((item) => (
             <div key={item.id}>
               <List>
                 <ListItem>
                   <ListItemText
                     primary={`${item.itemName} - ${item.capacity}g/ml`}
-                    secondary={`₹${item.itemPrice} | Calc: ${item.calculatedPrice}`}
+                    secondary={
+                      <>
+                        <Typography component="span" variant="body2" color="text.secondary">
+                          Price: ₹{item.actualPrice} | Calc: {item.calculatedPrice}
+                        </Typography>
+                        <br />
+                        <Typography component="span" variant="caption" color="text.secondary">
+                          {item.description ? `Description: ${item.description}` : "No Description"}
+                        </Typography>
+                      </>
+                    }
+                    
                   />
                 </ListItem>
               </List>
@@ -246,7 +278,29 @@ export default function Expense() {
           <Typography variant="body2" color="text.secondary">
             No expenses yet
           </Typography>
-        )}
+        )
+        : <Grid sx={{ height: "100%", textAlign: 'center', alignContent: 'center' }}><CircularProgress size={70} /></Grid>
+      }
+      </Grid>
+      <Grid
+        sx={{
+          position: 'absolute',
+          bgcolor: '#6d04a5',
+          color: '#f4e4f6',
+          borderRadius: 2,
+          top: 10,
+          right:10,
+          width: 180,
+          height: 50,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        <Stack direction={'row'} gap={1}>
+          <Typography>Total Expense: </Typography>
+          <Typography>{isResOk ? `₹${amount}` : <CircularProgress size={20} />}</Typography>
+        </Stack>
       </Grid>
     </Grid>
   );
