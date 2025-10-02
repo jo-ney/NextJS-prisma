@@ -1,4 +1,4 @@
-"use client";
+
 // /**
 //  * import react
 //  */
@@ -83,7 +83,7 @@
 // }
 
 
-
+"use client";
 
 import { useState, useEffect } from "react";
 
@@ -134,6 +134,7 @@ export default function Expense() {
   //total
 
   const totalAmount = () => {
+    setAmount(0)
     if(entries.length>0) {
       entries.map((item) => {
         setAmount((prev) => prev + item.actualPrice)

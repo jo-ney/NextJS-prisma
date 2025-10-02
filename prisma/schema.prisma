@@ -1,25 +1,17 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-
-
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
-}
-
 generator client {
   provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model FoodEntry {
   id          Int      @id @default(autoincrement())
   session     String?
-  foodName        String
+  foodName    String
   weight      Int
   description String?
   createdAt   DateTime @default(now())
@@ -27,20 +19,20 @@ model FoodEntry {
 
 model Expense {
   id              Int      @id @default(autoincrement())
-  createdAt       DateTime @default(now())    // when record is inserted
-  dateTime        DateTime                     // expense date & time
+  createdAt       DateTime @default(now())
+  dateTime        DateTime
   itemName        String
-  capacity        Float                        // g or ml
-  itemPrice       Float                        // actual item price
-  actualPrice     Float                        // given price per Kg/L
-  calculatedPrice Float                        // auto-calculated (optional, you can compute in app too)
-  description     String?                      // optional field
+  capacity        Float
+  itemPrice       Float
+  actualPrice     Float
+  calculatedPrice Float
+  description     String?
 }
 
 model Update {
   id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())   // when the update was created
-  updatedAt   DateTime @updatedAt        // auto update timestamp
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   title       String
   description String
   note        String?

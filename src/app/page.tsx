@@ -14,7 +14,7 @@ import { BottomNavigation, BottomNavigationAction, Grid, Paper } from "./mui";
 import Food from "./food";
 import Expense from "./expense";
 import Updates from "./Updates";
-import { JSX } from "@emotion/react/jsx-runtime";
+import type { JSX } from "react";
 
 // const components = {
 //   food: Food,
