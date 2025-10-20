@@ -115,7 +115,9 @@ export default function Updates() {
             maxHeight: 400,
             p: 5,
             borderRadius: 5,
-            bgcolor: "#88e1e0",
+            bgcolor: "rgba(255, 255, 255, 0.04)",
+            backdropFilter: "blur(100px)",
+            border: "1px solid rgba(255, 255, 255, 0.5)",
           }}
         >
           <Typography variant="h5" textAlign={"center"} mb={5}>
@@ -123,20 +125,65 @@ export default function Updates() {
           </Typography>
           <Grid container spacing={2} mb={5}>
             <TextField
+              size="small"
+              sx={{
+                input: { color: "#c4c4c4" }, // text color
+                label: { color: "#c4c4c4" }, // label color
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#c4c4c4", // border color
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#c4c4c4", // hover border
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#c4c4c4", // focused border
+                  },
+                },
+              }}
               label="Title"
-              sx={{ width: 200 }}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
             <TextField
+              size="small"
+              sx={{
+                input: { color: "#c4c4c4" }, // text color
+                label: { color: "#c4c4c4" }, // label color
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#c4c4c4", // border color
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#c4c4c4", // hover border
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#c4c4c4", // focused border
+                  },
+                },
+              }}
               label="Description"
-              sx={{ width: 200 }}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
             <TextField
+            size="small"
+            sx={{
+              input: { color: "#c4c4c4" }, // text color
+              label: { color: "#c4c4c4" }, // label color
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "#c4c4c4", // border color
+                },
+                "&:hover fieldset": {
+                  borderColor: "#c4c4c4", // hover border
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "#c4c4c4", // focused border
+                },
+              },
+            }}
               label="Note"
-              sx={{ width: 200 }}
               value={note}
               onChange={(e) => setNote(e.target.value)}
             />

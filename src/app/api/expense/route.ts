@@ -11,7 +11,7 @@ export async function GET() {
     return NextResponse.json(expenses, { status: 200 });
   } catch (err) {
     console.error("❌ Error fetching expenses:", err);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    return NextResponse.json({ error: err }, { status: 500 });
   }
 }
 
@@ -25,9 +25,9 @@ export async function POST(req: Request) {
         dateTime: new Date(body.dateTime),
         itemName: body.itemName,
         capacity: Number(body.capacity),
+        unit: body.unit,
         itemPrice: Number(body.itemPrice),
         actualPrice: Number(body.actualPrice),
-        calculatedPrice: Number(body.calculatedPrice),
         description: body.description || null,
       },
     });

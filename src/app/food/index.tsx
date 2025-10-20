@@ -4,17 +4,26 @@
  * import react
  */
 
-
 /**
  * import mui
  */
-import { Autocomplete, Box, Button, CircularProgress, Divider, Grid, List, ListItem, ListItemText, TextField, Typography } from "../mui";
+import {
+  Autocomplete,
+  Box,
+  Button,
+  CircularProgress,
+  Divider,
+  Grid,
+  List,
+  ListItem,
+  ListItemText,
+  TextField,
+  Typography,
+} from "../mui";
 import { useState, useEffect } from "react";
 
 export default function Food() {
-  const sessions = [
-    'Morning', 'Afternoon', 'Evening', 'Night'
-  ]
+  const sessions = ["Morning", "Afternoon", "Evening", "Night"];
 
   /**
    * gpt
@@ -23,7 +32,7 @@ export default function Food() {
   const [food, setFood] = useState("");
   const [weight, setWeight] = useState("");
   const [description, setDescription] = useState("");
-  const [ isResOk, setIsResOk ] = useState(false)
+  const [isResOk, setIsResOk] = useState(false);
 
   type FoodEntry = {
     id: number;
@@ -33,7 +42,7 @@ export default function Food() {
     description?: string;
     createdAt: string;
   };
-  
+
   const [entries, setEntries] = useState<FoodEntry[]>([]);
 
   // Fetch today's entries
@@ -42,7 +51,7 @@ export default function Food() {
     if (res.ok) {
       const data = await res.json();
       setEntries(data);
-      setIsResOk(true)
+      setIsResOk(true);
     }
   };
 
@@ -54,7 +63,12 @@ export default function Food() {
     const res = await fetch("../api/food", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ session, food, weight: Number(weight), description }),
+      body: JSON.stringify({
+        session,
+        food,
+        weight: Number(weight),
+        description,
+      }),
     });
 
     if (res.ok) {
@@ -81,10 +95,10 @@ export default function Food() {
         sx={{
           display: "flex",
           justifyContent: "center",
-          flexDirection: { xs: 'column', md: 'row'},
+          flexDirection: { xs: "column", md: "row" },
           alignItems: "center",
           gap: 3,
-          mt: 4
+          mt: 4,
         }}
       >
         <Grid
@@ -92,90 +106,180 @@ export default function Food() {
             maxWidth: 300,
             maxHeight: 450,
             p: 5,
-            borderRadius: 5, 
-            bgcolor: '#fdbd09'
+            borderRadius: 5,
+            bgcolor: "rgba(255, 255, 255, 0.04)",
+            backdropFilter: "blur(100px)",
+            border: "1px solid rgba(255, 255, 255, 0.5)",
           }}
         >
-          <Typography variant="h5" textAlign={'center'} mb={5}>Food Tracker</Typography>
+          <Typography variant="h5" textAlign={"center"} mb={5}>
+            Food Tracker
+          </Typography>
           <Grid container spacing={2}>
             <Autocomplete
+              size="small"
+              fullWidth
+              sx={{
+                input: { color: "#c4c4c4" }, // text color
+                label: { color: "#c4c4c4" }, // label color
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#c4c4c4", // border color
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#c4c4c4", // hover border
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#c4c4c4", // focused border
+                  },
+                },
+              }}
               disablePortal
               options={sessions}
               value={session}
-              sx={{ width: 300 }}
-              onChange={(event: unknown, newValue: string | null) => setSession(newValue)}
-              renderInput={(params) => <TextField {...params} label="Session" />}
+              onChange={(event: unknown, newValue: string | null) =>
+                setSession(newValue)
+              }
+              renderInput={(params) => (
+                <TextField {...params} label="Session" />
+              )}
             />
             <TextField
-              label='Food'
+              size="small"
               sx={{
-                width: 200
+                input: { color: "#c4c4c4" }, // text color
+                label: { color: "#c4c4c4" }, // label color
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#c4c4c4", // border color
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#c4c4c4", // hover border
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#c4c4c4", // focused border
+                  },
+                },
               }}
+              label="Food"
               value={food}
               onChange={(e) => setFood(e.target.value)}
             ></TextField>
             <TextField
-              label='Weight(g)'
-              type="number"
+              size="small"
               sx={{
-                width: 100,
-                "& .MuiInputLabel-root": { fontSize: "0.8rem" },
+                input: { color: "#c4c4c4" }, // text color
+                label: { color: "#c4c4c4" }, // label color
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#c4c4c4", // border color
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#c4c4c4", // hover border
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#c4c4c4", // focused border
+                  },
+                },
               }}
+              label="Weight(g)"
+              type="number"
               value={weight}
               onChange={(e) => setWeight(e.target.value)}
             ></TextField>
           </Grid>
           <Grid my={2}>
-            <TextField label='Description' value={description} onChange={(e) => setDescription(e.target.value)} ></TextField>
+            <TextField
+              sx={{
+                input: { color: "#c4c4c4" }, // text color
+                label: { color: "#c4c4c4" }, // label color
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#c4c4c4", // border color
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#c4c4c4", // hover border
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#c4c4c4", // focused border
+                  },
+                },
+              }}
+              label="Description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            ></TextField>
           </Grid>
           <Grid
             sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
-          ><Button variant="contained" onClick={handleSubmit} >Submit</Button></Grid>
+          >
+            <Button variant="contained" onClick={handleSubmit}>
+              Submit
+            </Button>
+          </Grid>
         </Grid>
 
-         {/* Entries List */}
-        <Grid sx={{
-          maxWidth: 300,
-          width: "100%",
-          maxHeight: 450,
-          height: '100%',
-          overflow: "scroll",
-          "&::-webkit-scrollbar": { display: "none" },
-          bgcolor: "#a7058d",
-          p: 5,
-          borderRadius: 5
-          }}>
-          <Typography variant="h6" mb={1}>Today’s Entries</Typography>
-          {isResOk ? grouped.map((group) => (
-            <Box key={group.session} mb={2}>
-              <Typography variant="subtitle1" fontWeight="bold">{group.session}</Typography>
-              <List dense>
-                {group.items.length > 0 ? (
-                  group.items.map((item) => (
-                    <div key={item.id}>
-                      <ListItem>
-                        <ListItemText
-                          primary={`${item.foodName} - ${item.weight}g`}
-                          secondary={item.description}
-                        />
-                      </ListItem>
-                      <Divider />
-                    </div>
-                  ))
-                ) : (
-                  <Typography variant="body2" color="text.secondary">No entries</Typography>
-                )}
-              </List>
-            </Box>
-          ))
-          : <Grid sx={{ height: "100%", textAlign: 'center', alignContent: 'center' }}><CircularProgress size={50} /></Grid>
-        }
+        {/* Entries List */}
+        <Grid
+          sx={{
+            maxWidth: 300,
+            width: "100%",
+            maxHeight: 450,
+            height: "100%",
+            overflow: "scroll",
+            "&::-webkit-scrollbar": { display: "none" },
+            p: 5,
+            borderRadius: 5,
+            bgcolor: "rgba(255, 255, 255, 0.04)",
+            backdropFilter: "blur(100px)",
+            border: "1px solid rgba(255, 255, 255, 0.5)",
+          }}
+        >
+          <Typography variant="h6" mb={1}>
+            Today’s Entries
+          </Typography>
+          {isResOk ? (
+            grouped.map((group) => (
+              <Box key={group.session} mb={2}
+                sx={{color: 'white'}}
+              >
+                <Typography variant="subtitle1" fontWeight="bold">
+                  {group.session}
+                </Typography>
+                <List dense>
+                  {group.items.length > 0 ? (
+                    group.items.map((item) => (
+                      <div key={item.id}>
+                        <Typography>{item.foodName} - ${item.weight}</Typography>
+                        <Typography variant="body2" color='grey'>{item.description}</Typography>
+                        <Divider sx={{ bgcolor: "grey.500", mt: 0.5, mb: 1}}/>
+                      </div>
+                    ))
+                  ) : (
+                    <Typography variant="body2" color="text.secondary">
+                      No entries
+                    </Typography>
+                  )}
+                </List>
+              </Box>
+            ))
+          ) : (
+            <Grid
+              sx={{
+                height: "100%",
+                textAlign: "center",
+                alignContent: "center",
+              }}
+            >
+              <CircularProgress size={50} />
+            </Grid>
+          )}
         </Grid>
       </Grid>
-   </>
+    </>
   );
 }

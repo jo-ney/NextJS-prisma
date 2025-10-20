@@ -50,7 +50,7 @@ export default function Home() {
       >
         {Component && <Component />}
 
-        <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
+        <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 2 }} elevation={3}>
           <BottomNavigation
             showLabels
             value={value}
@@ -58,7 +58,10 @@ export default function Home() {
               setValue(newValue);
             }}
             sx={{
-              bgcolor: '#ff671d'
+              bgcolor: '#434343',
+              "& .MuiBottomNavigationAction-root": {
+                color: "#dedede",       // Default icon + label color
+              } 
             }}
           >
             <BottomNavigationAction label='Food' icon={<Egg/>} value='food'/>

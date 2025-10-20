@@ -22,10 +22,10 @@ model Expense {
   createdAt       DateTime @default(now())
   dateTime        DateTime
   itemName        String
-  capacity        Float
+  capacity        Float?
+  unit            String?
   itemPrice       Float
-  actualPrice     Float
-  calculatedPrice Float
+  actualPrice     Float?
   description     String?
 }
 
