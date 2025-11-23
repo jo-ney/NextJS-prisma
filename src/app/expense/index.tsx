@@ -83,51 +83,6 @@ export default function Expense() {
     },
   ];
 
-  const totalAmount = () => {
-    setAmount(0);
-
-    if (entries.length > 0) {
-      const currentDate = new Date();
-      const currentMonth = currentDate.getMonth(); // 0–11
-      const currentYear = currentDate.getFullYear();
-
-      // Filter only this month's entries
-      const thisMonthEntries = entries.filter((item) => {
-        const entryDate = new Date(item.dateTime); // or item.createdAt
-        return (
-          entryDate.getMonth() === currentMonth &&
-          entryDate.getFullYear() === currentYear
-        );
-      });
-
-      // Calculate total
-      const total = thisMonthEntries.reduce(
-        (sum, item) => sum + (item.itemPrice || 0),
-        0
-      );
-
-      setAmount(total);
-    } else {
-      setAmount(0);
-    }
-  };
-
-  const totaltableamount = () => {
-    setTableAmount(0)
-    entries?.map((item) => {
-      setTableAmount((prev) => prev + item.itemPrice);
-    });
-  };
-
-  useEffect(() => {
-    fetchEntries();
-  }, []);
-
-  useEffect(() => {
-    totalAmount();
-    totaltableamount();
-  }, [entries]);
-
   // Submit handler
   const handleSubmit = async () => {
     const res = await fetch("/api/expense", {
@@ -143,7 +98,7 @@ export default function Expense() {
         dateTime: new Date(),
       }),
     });
-    
+
     if (res.ok) {
       alert("Expense saved ✅");
       setItemName("");
@@ -158,6 +113,43 @@ export default function Expense() {
     }
   };
 
+  useEffect(() => {
+    fetchEntries();
+  }, []);
+
+  useEffect(() => {
+    setAmount(0);
+
+    if (entries.length > 0) {
+      const currentDate = new Date();
+      const currentMonth = currentDate.getMonth();
+      const currentYear = currentDate.getFullYear();
+
+      const thisMonthEntries = entries.filter((item) => {
+        const entryDate = new Date(item.dateTime);
+        return (
+          entryDate.getMonth() === currentMonth &&
+          entryDate.getFullYear() === currentYear
+        );
+      });
+
+      const total = thisMonthEntries.reduce(
+        (sum, item) => sum + (item.itemPrice || 0),
+        0
+      );
+      setAmount(total);
+    } else {
+      setAmount(0);
+    }
+
+    // ---- totaltableamount() logic ----
+    const tableTotal = entries.reduce(
+      (sum, item) => sum + (item.itemPrice || 0),
+      0
+    );
+    setTableAmount(tableTotal);
+  }, [entries]);
+
   return (
     <>
       <Grid
@@ -171,16 +163,16 @@ export default function Expense() {
       >
         <Grid>
           <Box
-          component={'span'}
+            component={"span"}
             sx={{
               bgcolor: "#B9B9B9",
               color: "black",
               borderRadius: 2,
-              display: 'flex',
-              justifyContent: 'space-between',
-              width: '160px',
+              display: "flex",
+              justifyContent: "space-between",
+              width: "160px",
               py: 1,
-              px: 2
+              px: 2,
             }}
           >
             <Typography>Total Expense: </Typography>
@@ -208,12 +200,14 @@ export default function Expense() {
             </Typography>
 
             <Button
-            onClick={() => setIsAddFormOpen(true)}
-            sx={{
-              bgcolor: '#B9B9B9',
-              color: 'black'
-            }}
-            >Add</Button>
+              onClick={() => setIsAddFormOpen(true)}
+              sx={{
+                bgcolor: "#B9B9B9",
+                color: "black",
+              }}
+            >
+              Add
+            </Button>
           </Grid>
 
           <TableContainer
@@ -238,7 +232,7 @@ export default function Expense() {
                 <TableRow>
                   {tableHeaders.map((header, index) => (
                     <TableCell
-                    key={index}
+                      key={index}
                       sx={{
                         bgcolor: "#b9b9b9",
                         borderRight: "1px solid #ccc",
