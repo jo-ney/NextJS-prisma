@@ -11,10 +11,6 @@ import {
   Grid,
   TextField,
   Typography,
-  List,
-  ListItem,
-  Divider,
-  ListItemText,
   CircularProgress,
   Stack,
   Autocomplete,
@@ -47,13 +43,13 @@ type ExpenseEntry = {
 export default function Expense() {
   const [itemName, setItemName] = useState("");
   const [capacity, setCapacity] = useState("");
-  const [unit, setUnit] = useState(null);
+  const [unit, setUnit] = useState("");
   const [itemPrice, setItemPrice] = useState("");
   const [actualPrice, setActualPrice] = useState("");
   const [description, setDescription] = useState("");
   const [entries, setEntries] = useState<ExpenseEntry[]>([]);
   const [isResOk, setIsResOk] = useState(false);
-  const [amount, setAmount] = useState<number>(0);
+  const [amount, setAmount] = useState(0);
   const [tableamount, setTableAmount] = useState(0);
 
   const [isAddFormOpen, setIsAddFormOpen] = useState(false);
@@ -117,6 +113,7 @@ export default function Expense() {
   };
 
   const totaltableamount = () => {
+    setTableAmount(0)
     entries?.map((item) => {
       setTableAmount((prev) => prev + item.itemPrice);
     });
@@ -154,7 +151,7 @@ export default function Expense() {
       setItemPrice("");
       setActualPrice("");
       setDescription("");
-      setUnit(null);
+      setUnit("");
       fetchEntries();
     } else {
       alert("Error saving expense ❌");
@@ -239,8 +236,9 @@ export default function Expense() {
             >
               <TableHead>
                 <TableRow>
-                  {tableHeaders.map((header) => (
+                  {tableHeaders.map((header, index) => (
                     <TableCell
+                    key={index}
                       sx={{
                         bgcolor: "#b9b9b9",
                         borderRight: "1px solid #ccc",
@@ -445,8 +443,8 @@ export default function Expense() {
                     }}
                     disablePortal
                     options={["Kg", "L", "Piece"]}
-                    onChange={(e, newValue: any) => {
-                      setUnit(newValue);
+                    onChange={(e, newValue) => {
+                      setUnit(newValue ?? "");
                     }}
                     renderInput={(params) => (
                       <TextField {...params} label="Unit" />
