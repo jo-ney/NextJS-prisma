@@ -60,21 +60,22 @@ export default function Expense() {
   const [isAddFormOpen, setIsAddFormOpen] = useState(false);
 
   // Fetch entries
-  const fetchEntries = async () => {
-    setIsResOk(false);
-    const res = await fetch("/api/expense");
-    if (res.ok) {
-      const data: ExpenseEntry[] = await res.json();
-      setEntries(data);
-      setIsResOk(true);
-    }
-  };
+  // const fetchEntries = async () => {
+  //   setIsResOk(false);
+  //   const res = await fetch("/api/expense");
+  //   if (res.ok) {
+  //     const data: ExpenseEntry[] = await res.json();
+  //     setEntries(data);
+  //     setIsResOk(true);
+  //   }
+  // };
 
   const searchEntries = async () => {
     setIsResOk(false);
-    let inputData = {
+    const inputData = {
       filter: {}
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const res: any = ExpenseRemote.searchExpense(inputData)
     if (res.status === 200) {
       // const data: ExpenseEntry[] = await res.json();
