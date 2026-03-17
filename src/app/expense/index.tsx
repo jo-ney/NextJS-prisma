@@ -27,6 +27,11 @@ import {
   DialogContent,
 } from "../mui";
 import { Close } from "@mui/icons-material";
+
+import expenseRemote from "../../remote/expense/expense.remote"
+
+const ExpenseRemote = new expenseRemote()
+
 // 2️⃣ Type declaration goes here, before the component
 type ExpenseEntry = {
   id: number;
@@ -61,6 +66,19 @@ export default function Expense() {
     if (res.ok) {
       const data: ExpenseEntry[] = await res.json();
       setEntries(data);
+      setIsResOk(true);
+    }
+  };
+
+  const searchEntries = async () => {
+    setIsResOk(false);
+    let inputData = {
+      filter: {}
+    }
+    const res: any = ExpenseRemote.searchExpense(inputData)
+    if (res.status === 200) {
+      // const data: ExpenseEntry[] = await res.json();
+      setEntries(res.data);
       setIsResOk(true);
     }
   };
@@ -107,14 +125,16 @@ export default function Expense() {
       setActualPrice("");
       setDescription("");
       setUnit("");
-      fetchEntries();
+      // fetchEntries();
+      searchEntries()
     } else {
       alert("Error saving expense ❌");
     }
   };
 
   useEffect(() => {
-    fetchEntries();
+    // fetchEntries();
+    searchEntries()
   }, []);
 
   useEffect(() => {
