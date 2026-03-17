@@ -2,7 +2,7 @@
 
 const API_URL = "https://backend-node-js-template.vercel.app";
 
-export default class {
+export default class CoreRemote {
   async post(endpoint, inputdata) {
     const response = await fetch(`${API_URL}${endpoint}`, {
       method: "POST",
@@ -62,6 +62,7 @@ export default class {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
+        body: JSON.stringify(inputdata),
       });
 
       if (!response.ok) {
