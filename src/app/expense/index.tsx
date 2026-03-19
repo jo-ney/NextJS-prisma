@@ -71,11 +71,12 @@ export default function Expense() {
   // };
 
   const searchEntries = async () => {
+  console.log('console------>searchEntries:', "searchEntries");
     setIsResOk(false);
     const inputData = {
       filter: {}
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const res: any = ExpenseRemote.searchExpense(inputData)
     if (res.status === 200) {
       // const data: ExpenseEntry[] = await res.json();
@@ -83,6 +84,17 @@ export default function Expense() {
       setIsResOk(true);
     }
   };
+
+
+
+
+
+
+
+
+
+
+  
 
   const tableHeaders = [
     {
@@ -133,8 +145,34 @@ export default function Expense() {
     }
   };
 
+  // Get expenses with filters
+const fetchExpenses = async () => {
+  const response = await fetch('/api/expense', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      filters: {
+        search: 'Petrol',
+        minPrice: 100,
+        maxPrice: 500,
+        startDate: '2025-01-01',
+        endDate: '2025-12-31',
+      },
+      pagination: {
+        page: 1,
+        limit: 50,
+      },
+    }),
+  });
+  
+  const result = await response.json();
+  console.log('console------>result:', result);
+  console.log('Expenses:', result.data);
+};
+
   useEffect(() => {
     // fetchEntries();
+    fetchExpenses()
     searchEntries()
   }, []);
 
@@ -171,8 +209,11 @@ export default function Expense() {
     setTableAmount(tableTotal);
   }, [entries]);
 
+  
+
   return (
     <>
+
       <Grid
         sx={{
           display: "flex",
