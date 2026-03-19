@@ -56,14 +56,17 @@ export default class CoreRemote {
       // Build URL with query parameters if inputdata exists
       const url = `${API_URL}${endpoint}`;
 
-      const response = await fetch(url, {
+console.log('console------>"ghg":', "ghg");
+      const response = await fetch("https://backend-node-js-template.vercel.app/api/expense", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify(inputdata),
+        // body: JSON.stringify(inputdata),
       });
+      console.log('console------>response:', response);
+
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
