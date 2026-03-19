@@ -16,25 +16,59 @@ export async function GET() {
 }
 
 // POST new expense
+// export async function POST(req: Request) {
+//   try {
+//     const body = await req.json();
+
+//     const expense = await prisma.expense.create({
+//       data: {
+//         dateTime: new Date(body.dateTime),
+//         itemName: body.itemName,
+//         capacity: Number(body.capacity),
+//         unit: body.unit,
+//         itemPrice: Number(body.itemPrice),
+//         actualPrice: Number(body.actualPrice),
+//         description: body.description || null,
+//       },
+//     });
+
+//     return NextResponse.json(expense, { status: 201 });
+//   } catch (err) {
+//     console.error("❌ Error saving expense:", err);
+//     return NextResponse.json({ error: "Server error" }, { status: 500 });
+//   }
+// }
+
+
+// app/api/expense/route.ts
+
+// GET - Fetch expenses with sorting options
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
-
-    const expense = await prisma.expense.create({
-      data: {
-        dateTime: new Date(body.dateTime),
-        itemName: body.itemName,
-        capacity: Number(body.capacity),
-        unit: body.unit,
-        itemPrice: Number(body.itemPrice),
-        actualPrice: Number(body.actualPrice),
-        description: body.description || null,
+    const { searchParams } = new URL(req.url);
+    
+    // Sorting options
+    const sortBy = searchParams.get('sortBy') || 'createdAt';
+    const sortOrder = searchParams.get('sortOrder') || 'desc';
+    
+    // Validate sort field
+    const validSortFields = ['createdAt', 'dateTime', 'itemName', 'itemPrice', 'actualPrice'];
+    const orderByField = validSortFields.includes(sortBy) ? sortBy : 'createdAt';
+    
+    const expenses = await prisma.expense.findMany({
+      orderBy: {
+        [orderByField]: sortOrder === 'asc' ? 'asc' : 'desc'
       },
     });
 
-    return NextResponse.json(expense, { status: 201 });
-  } catch (err) {
-    console.error("❌ Error saving expense:", err);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    return NextResponse.json(expenses, { status: 200 });
+    
+  } catch (error) {
+    console.error("❌ Error fetching expenses:", error);
+    
+    return NextResponse.json(
+      { error: "Failed to fetch expenses" }, 
+      { status: 500 }
+    );
   }
 }
