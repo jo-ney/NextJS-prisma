@@ -20,6 +20,13 @@ import {
 } from "../mui";
 import { useState, useEffect } from "react";
 
+import dynamic from "next/dynamic";
+
+const LottieAnimation = dynamic(() => import("../components/LottieAnimation"), {
+  ssr: false,
+  loading: () => <div style={{ width: 200, height: 200 }} />,
+});
+
 export default function Food() {
   const sessions = ["Morning", "Afternoon", "Evening", "Night"];
 
@@ -31,6 +38,8 @@ export default function Food() {
   const [weight, setWeight] = useState("");
   const [description, setDescription] = useState("");
   const [isResOk, setIsResOk] = useState(false);
+
+  const [loading, setLoading] = useState(false);
 
   type FoodEntry = {
     id: number;
@@ -45,11 +54,13 @@ export default function Food() {
 
   // Fetch today's entries
   const fetchEntries = async () => {
+    setLoading(true);
     const res = await fetch("/api/food");
     if (res.ok) {
       const data = await res.json();
       setEntries(data);
       setIsResOk(true);
+      setLoading(false);
     }
   };
 
@@ -70,12 +81,12 @@ export default function Food() {
     });
 
     if (res.ok) {
-      alert("Food entry saved ✅");
+      // alert("Food entry saved ✅");
       setSession(null);
       setFood("");
       setWeight("");
       setDescription("");
-      fetchEntries(); // refresh list
+      fetchEntries();
     } else {
       alert("Error saving food ❌");
     }
@@ -240,41 +251,60 @@ export default function Food() {
           <Typography variant="h6" mb={1}>
             Today’s Entries
           </Typography>
-          {isResOk ? (
-            grouped.map((group) => (
-              <Box key={group.session} mb={2}
-                sx={{color: 'white'}}
+
+          {loading ? (
+            <div>
+              <div
+                style={{ paddingBottom: 4 }}
               >
-                <Typography variant="subtitle1" fontWeight="bold">
-                  {group.session}
-                </Typography>
-                <List dense>
-                  {group.items.length > 0 ? (
-                    group.items.map((item) => (
-                      <div key={item.id}>
-                        <Typography>{item.foodName} - ${item.weight}</Typography>
-                        <Typography variant="body2" color='grey'>{item.description}</Typography>
-                        <Divider sx={{ bgcolor: "grey.500", mt: 0.5, mb: 1}}/>
-                      </div>
-                    ))
-                  ) : (
-                    <Typography variant="body2" color="text.secondary">
-                      No entries
-                    </Typography>
-                  )}
-                </List>
-              </Box>
-            ))
+                <div style={{ width: "250px", margin: "40px auto" }}>
+                  <LottieAnimation />
+                </div>
+              </div>
+            </div>
           ) : (
-            <Grid
-              sx={{
-                height: "100%",
-                textAlign: "center",
-                alignContent: "center",
-              }}
-            >
-              <CircularProgress size={50} />
-            </Grid>
+            <>
+              {isResOk ? (
+                grouped.map((group) => (
+                  <Box key={group.session} mb={2} sx={{ color: "white" }}>
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      {group.session}
+                    </Typography>
+                    <List dense>
+                      {group.items.length > 0 ? (
+                        group.items.map((item) => (
+                          <div key={item.id}>
+                            <Typography>
+                              {item.foodName} - ${item.weight}
+                            </Typography>
+                            <Typography variant="body2" color="grey">
+                              {item.description}
+                            </Typography>
+                            <Divider
+                              sx={{ bgcolor: "grey.500", mt: 0.5, mb: 1 }}
+                            />
+                          </div>
+                        ))
+                      ) : (
+                        <Typography variant="body2" color="text.secondary">
+                          No entries
+                        </Typography>
+                      )}
+                    </List>
+                  </Box>
+                ))
+              ) : (
+                <Grid
+                  sx={{
+                    height: "100%",
+                    textAlign: "center",
+                    alignContent: "center",
+                  }}
+                >
+                  <Typography>No data</Typography>
+                </Grid>
+              )}
+            </>
           )}
         </Grid>
       </Grid>
