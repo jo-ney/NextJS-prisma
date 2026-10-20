@@ -19,9 +19,7 @@ export default class CoreRemote {
   }
 
   // async get(endpoint, inputdata) {
-  // console.log('console------>11111111111111inputdata:', inputdata);
   //     const url = `${API_URL}${endpoint}`;
-  //     console.log('console------>url:', url);
 
   //     const response = await fetch(url, {
   //       method: 'GET',
@@ -45,7 +43,6 @@ export default class CoreRemote {
   //     console.log('Full URL:', url);
 
   //     const response = await fetch(url, { method: 'GET' });
-  //     console.log('console------>response:', response);
 
   //     if (!response.ok) throw new Error(`HTTP ${response.status}`);
   //     return response.json();
@@ -56,7 +53,6 @@ export default class CoreRemote {
       // Build URL with query parameters if inputdata exists
       const url = `${API_URL}${endpoint}`;
 
-console.log('console------>"ghg":', "ghg");
       const response = await fetch("https://backend-node-js-template.vercel.app/api/expense", {
         method: "GET",
         headers: {
@@ -65,7 +61,6 @@ console.log('console------>"ghg":', "ghg");
         },
         // body: JSON.stringify(inputdata),
       });
-      console.log('console------>response:', response);
 
 
       if (!response.ok) {

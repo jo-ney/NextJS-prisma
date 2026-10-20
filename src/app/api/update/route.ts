@@ -33,3 +33,34 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
+
+
+// export async function POST(req: Request) {
+//   try {
+//     const { searchParams } = new URL(req.url);
+    
+//     // Sorting options
+//     const sortBy = searchParams.get('sortBy') || 'createdAt';
+//     const sortOrder = searchParams.get('sortOrder') || 'desc';
+    
+//     // Validate sort field
+//     const validSortFields = ['createdAt', 'updatedAt', 'title', 'description', 'note'];
+//     const orderByField = validSortFields.includes(sortBy) ? sortBy : 'createdAt';
+    
+//     const updates = await prisma.update.findMany({
+//       orderBy: {
+//         [orderByField]: sortOrder === 'asc' ? 'asc' : 'desc'
+//       },
+//     });
+
+//     return NextResponse.json(updates, { status: 200 });
+    
+//   } catch (error) {
+//     console.error("❌ Error fetching updates:", error);
+    
+//     return NextResponse.json(
+//       { error: "Failed to fetch updates" }, 
+//       { status: 500 }
+//     );
+//   }
+// }
