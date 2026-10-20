@@ -19,7 +19,7 @@ import {
 } from "./../mui";
 import Food from "./../food";
 import Expense from "./../expense";
-import Updates from "./../updates";
+import Updates from "./index";
 import type { JSX } from "react";
 
 // const components = {
