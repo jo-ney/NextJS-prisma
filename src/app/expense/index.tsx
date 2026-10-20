@@ -26,11 +26,18 @@ import {
   DialogTitle,
   DialogContent,
 } from "../mui";
-import { Close } from "@mui/icons-material";
+import { Close, FontDownload } from "@mui/icons-material";
 
-import expenseRemote from "../../remote/expense/expense.remote"
+import expenseRemote from "../../remote/expense/expense.remote";
 
-const ExpenseRemote = new expenseRemote()
+import dynamic from "next/dynamic";
+
+const LottieAnimation = dynamic(() => import("../components/LottieAnimation"), {
+  ssr: false,
+  loading: () => <div style={{ width: 200, height: 200 }} />,
+});
+
+const ExpenseRemote = new expenseRemote();
 
 // 2️⃣ Type declaration goes here, before the component
 type ExpenseEntry = {
@@ -54,47 +61,12 @@ export default function Expense() {
   const [description, setDescription] = useState("");
   const [entries, setEntries] = useState<ExpenseEntry[]>([]);
   const [isResOk, setIsResOk] = useState(false);
-  const [amount, setAmount] = useState(0);
-  const [tableamount, setTableAmount] = useState(0);
+
+  const [loading, setLoading] = useState(false);
+
+  const [totalAmount, setTotalAmount] = useState(0);
 
   const [isAddFormOpen, setIsAddFormOpen] = useState(false);
-
-  // Fetch entries
-  // const fetchEntries = async () => {
-  //   setIsResOk(false);
-  //   const res = await fetch("/api/expense");
-  //   if (res.ok) {
-  //     const data: ExpenseEntry[] = await res.json();
-  //     setEntries(data);
-  //     setIsResOk(true);
-  //   }
-  // };
-
-  const searchEntries = async () => {
-  console.log('console------>searchEntries:', "searchEntries");
-    setIsResOk(false);
-    const inputData = {
-      filter: {}
-    }
-
-    const res: any = ExpenseRemote.searchExpense(inputData)
-    if (res.status === 200) {
-      // const data: ExpenseEntry[] = await res.json();
-      setEntries(res.data);
-      setIsResOk(true);
-    }
-  };
-
-
-
-
-
-
-
-
-
-
-  
 
   const tableHeaders = [
     {
@@ -138,82 +110,39 @@ export default function Expense() {
       setActualPrice("");
       setDescription("");
       setUnit("");
-      // fetchEntries();
-      searchEntries()
+      setIsAddFormOpen(false);
+
+      fetchExpenses();
     } else {
       alert("Error saving expense ❌");
     }
   };
 
   // Get expenses with filters
-const fetchExpenses = async () => {
-  const response = await fetch('/api/expense', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      filters: {
-        search: 'Petrol',
-        minPrice: 100,
-        maxPrice: 500,
-        startDate: '2025-01-01',
-        endDate: '2025-12-31',
-      },
-      pagination: {
-        page: 1,
-        limit: 50,
-      },
-    }),
-  });
-  
-  const result = await response.json();
-  console.log('console------>result:', result);
-  console.log('Expenses:', result.data);
-};
+  const fetchExpenses = async () => {
+    setLoading(true);
+    const response = await fetch("/api/expense", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
 
-  useEffect(() => {
-    // fetchEntries();
-    fetchExpenses()
-    searchEntries()
-  }, []);
+    const result = await response.json();
 
-  useEffect(() => {
-    setAmount(0);
+    setEntries(result);
 
-    if (entries.length > 0) {
-      const currentDate = new Date();
-      const currentMonth = currentDate.getMonth();
-      const currentYear = currentDate.getFullYear();
-
-      const thisMonthEntries = entries.filter((item) => {
-        const entryDate = new Date(item.dateTime);
-        return (
-          entryDate.getMonth() === currentMonth &&
-          entryDate.getFullYear() === currentYear
-        );
-      });
-
-      const total = thisMonthEntries.reduce(
-        (sum, item) => sum + (item.itemPrice || 0),
-        0
-      );
-      setAmount(total);
-    } else {
-      setAmount(0);
-    }
-
-    // ---- totaltableamount() logic ----
-    const tableTotal = entries.reduce(
-      (sum, item) => sum + (item.itemPrice || 0),
-      0
+    setTotalAmount(
+      result?.reduce((sum: any, e: any) => sum + Number(e.itemPrice), 0) ?? 0
     );
-    setTableAmount(tableTotal);
-  }, [entries]);
+    setIsResOk(true);
+    setLoading(false);
+  };
 
-  
+  useEffect(() => {
+    fetchExpenses();
+  }, []);
 
   return (
     <>
-
       <Grid
         sx={{
           display: "flex",
@@ -232,14 +161,23 @@ const fetchExpenses = async () => {
               borderRadius: 2,
               display: "flex",
               justifyContent: "space-between",
-              width: "160px",
+              width: "fit-content",
               py: 1,
               px: 2,
             }}
           >
-            <Typography>Total Expense: </Typography>
+            <Typography sx={{ fontWeight: "bold" }}>Total Expense: </Typography>
             <Typography>
-              {isResOk ? `₹${amount}` : <CircularProgress size={20} />}
+              {isResOk ? (
+                `₹${
+                  entries?.reduce(
+                    (sum, e: any) => sum + Number(e.itemPrice),
+                    0
+                  ) ?? 0
+                }`
+              ) : (
+                <CircularProgress size={20} />
+              )}
             </Typography>
           </Box>
         </Grid>
@@ -257,7 +195,12 @@ const fetchExpenses = async () => {
               pb: 2,
             }}
           >
-            <Typography variant="h6" color="#c4c4c4" mb={1}>
+            <Typography
+              variant="h6"
+              color="#c4c4c4"
+              sx={{ fontWeight: "bold" }}
+              mb={1}
+            >
               Recent Expenses
             </Typography>
 
@@ -266,6 +209,7 @@ const fetchExpenses = async () => {
               sx={{
                 bgcolor: "#B9B9B9",
                 color: "black",
+                fontWeight: "bold",
               }}
             >
               Add
@@ -298,6 +242,9 @@ const fetchExpenses = async () => {
                       sx={{
                         bgcolor: "#b9b9b9",
                         borderRight: "1px solid #ccc",
+                        fontWeight: "bold",
+                        letterSpacing: "0.5px",
+                        fontSize: "16px",
                       }}
                     >
                       {header.name}
@@ -306,49 +253,71 @@ const fetchExpenses = async () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {isResOk ? (
-                  entries.length > 0 ? (
-                    entries.map((row, index) => (
-                      <TableRow
-                        key={index}
-                        sx={{
-                          "& > *": {
-                            marginBottom: 2,
-                            borderRight: "1px solid #ccc",
-                            bgcolor: "#016157",
-                            color: "white",
-                          },
-                          "&:last-child td, &:last-child th": {
-                            // border: 0,
-                          },
-                        }}
-                      >
-                        <TableCell component="th" scope="row">
-                          {row.itemName}
-                        </TableCell>
-                        <TableCell align="left">
-                          {row.capacity} {row.unit}
-                        </TableCell>
-                        <TableCell align="right">{row.itemPrice}</TableCell>
-                        <TableCell align="right">
-                          {new Date(row.dateTime).toLocaleDateString("en-IN", {
-                            day: "2-digit",
-                            month: "2-digit",
-                            year: "numeric",
-                          })}
-                        </TableCell>
-                        <TableCell align="left">{row.description}</TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={tableHeaders.length}>
-                        No data found
-                      </TableCell>
-                    </TableRow>
-                  )
+                {loading ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={tableHeaders?.length}
+                      align="center"
+                      sx={{ py: 4 }}
+                    >
+                      <div style={{ width: "300px", margin: "0 auto" }}>
+                        <LottieAnimation />
+                      </div>
+                    </TableCell>
+                  </TableRow>
                 ) : (
-                  <Typography></Typography>
+                  <>
+                    {isResOk ? (
+                      entries.length > 0 ? (
+                        entries.map((row, index) => (
+                          <TableRow
+                            key={index}
+                            sx={{
+                              "& > *": {
+                                marginBottom: 2,
+                                borderRight: "1px solid #ccc",
+                                bgcolor: "#016157",
+                                color: "white",
+                              },
+                              "& td, & th": { color: "#fff" },
+                              "&:last-child td, &:last-child th": {
+                                // border: 0,
+                              },
+                            }}
+                          >
+                            <TableCell component="th" scope="row">
+                              {row.itemName}
+                            </TableCell>
+                            <TableCell align="left">
+                              {row.capacity} {row.unit}
+                            </TableCell>
+                            <TableCell align="right">{row.itemPrice}</TableCell>
+                            <TableCell align="right">
+                              {new Date(row.dateTime).toLocaleDateString(
+                                "en-IN",
+                                {
+                                  day: "2-digit",
+                                  month: "2-digit",
+                                  year: "numeric",
+                                }
+                              )}
+                            </TableCell>
+                            <TableCell align="left">
+                              {row.description}
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={tableHeaders.length}>
+                            No data found
+                          </TableCell>
+                        </TableRow>
+                      )
+                    ) : (
+                      <Typography></Typography>
+                    )}
+                  </>
                 )}
               </TableBody>
               {isResOk && (
@@ -366,7 +335,7 @@ const fetchExpenses = async () => {
                     <TableCell colSpan={2}>
                       <Typography>Total : </Typography>
                     </TableCell>
-                    <TableCell align="right">{tableamount}</TableCell>
+                    <TableCell align="right">{totalAmount}</TableCell>
                   </TableRow>
                 </TableFooter>
               )}
